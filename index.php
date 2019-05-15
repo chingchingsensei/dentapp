@@ -1,37 +1,88 @@
 <?php
-  
 session_start();
+require_once("class.user.php");
+$login = new USER();
 
+if($login->is_loggedin()!="")
+{
+	$login->redirect('home.php');
+}
+
+if(isset($_POST['btn-login']))
+{
+	$uname = strip_tags($_POST['txt_uname_email']);
+	$umail = strip_tags($_POST['txt_uname_email']);
+	$upass = strip_tags($_POST['txt_password']);
+		
+	if($login->doLogin($uname,$umail,$upass))
+	{
+		$login->redirect('home.php');
+	}
+	else
+	{
+		$error = "Wrong Details !";
+	}	
+}
 include('header.php');
-include('nav.php');
 ?>
-  
-
-  <!--Banner-->
-  <div class="banner">
-    <div class="bg-color">
-      <div class="container">
-        <div class="row">
-          <div class="banner-text text-center">
-            <div class="text-border">
-              <h2 class="text-dec">DENTAL EXPERT <BR> WITHIN YOUR REACH</h2>
-            </div>
-            <div class="intro-para text-center quote">
-              <p class="big-text"></p>
-              <p class="small-text"></p>
-              
-            </div>
-            
-          </div>
-        </div>
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand">DENT<span>APP</span></a>
       </div>
+      
     </div>
-  </div>
-  <!--/ Banner-->
+  </nav>
 
+<div class="signin-form">
 
+	<div class="container">
+     
+        <div class="col-md-3">
+       <form class="form-signin" method="post" id="login-form">
+        
+        <div id="error">
+        <?php
+			if(isset($error))
+			{
+				?>
+                <div class="alert alert-danger">
+                   <i class="glyphicon glyphicon-warning-sign"></i> &nbsp; <?php echo $error; ?> !
+                </div>
+                <?php
+                header("refresh:5;location:index.php");
+			}
+		?>
+        </div>
+        
+        <div class="form-group">
+        <input type="text" class="form-control" name="txt_uname_email" placeholder="Username or E mail ID" required />
+        <span id="check-e"></span>
+        </div>
+        
+        <div class="form-group">
+        <input type="password" class="form-control" name="txt_password" placeholder="Your Password" />
+        </div>
+       
+     	<hr />
+        
+        <div class="form-group">
+            <button type="submit" name="btn-login" class="btn btn-submit">
+                	<i class="glyphicon glyphicon-log-in"></i> &nbsp; SIGN IN
+            </button>
+        </div>  
+      	<br />
+            
+      </form>
+    </div>
+    </div>
+    
+</div>
 
-<?php
-include('footer.php'); 
-?>  
-
+</body>
+</html>

@@ -1,115 +1,33 @@
-<?php  
-
- require('admin/dbcon.php');
-
-if ( isset($_SESSION['username'])!="" ) {
-    header("Location: client/");
-    exit;
-  }
-if(isset($_POST["btn-login"]))  
-{  
-  if(empty($_POST["username"]) || empty($_POST["password"]))  
-    {  
-      $message = '<label>All fields are required</label>';  
-    }  
-    else 
-  {
-    $username = $_POST['username'];
-    $password = md5($_POST['password']);
-
-    $sthandler = $DB_con->prepare("SELECT * FROM patient WHERE username = :username AND password = :password");
-    $sthandler->bindParam(':username', $username);
-    $sthandler->bindParam(':password', $password);
-    $sthandler->execute();
-
-    $count = $sthandler->rowCount();  
-        if($count > 0)  
-        {  
-           $_SESSION["username"] = $_POST["username"];  
-           header("location:client/index.php?username=".$_SESSION["username"]);  
-        }  
-        else  
-        {  
-           $message = '<label>User Login Incorrect.</label>';  
-        } 
-    }
-}
-
-?>
- <!--Navigation bar-->
-  <nav class="navbar navbar-default navbar-fixed-top">
+<!--Navigation bar-->
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.php">DENT<span>APP</span></a>
       </div>
-      <div class="collapse navbar-collapse" id="myNavbar">
+      <div class="collapse navbar-collapse" id="navbar">
         <ul class="nav navbar-nav navbar-right">
-          <!--li><a href="index.php">Home</a></li>
-          <li><a href="services.php">Services</a></li>
-          <li><a href="#footer">Contact</a></li-->
-          <li class="btn-trial"><a href="#" data-target="#login" data-toggle="modal">Make an Appointment</a></li>
+          <li><a href="index.php">Home</a></li>
+          <li><a href="profile.php">Unavailable Dates</a></li>
+          <li><a href="service.php">Services</a></li>
+          <li><a href="patient.php">Clients</a></li>
+          
+          
+          <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-user"></span>&nbsp;Hi' <?php echo $userRow['user_name']; ?>&nbsp;<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="calendar"><span class="glyphicon glyphicon-calendar"></span>&nbsp;Manage</a></li>
+                <li><a href="profiledoc.php?user_id=<?php echo $user_id; ?>"><span class="glyphicon glyphicon-user"></span>&nbsp;Profile</a></li>
+                <li><a href="logout.php?logout=true"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
+              </ul>
+            </li>
         </ul>
       </div>
     </div>
   </nav>
-  <!--/ Navigation bar-->
-  <!--Modal box-->
-  <div class="modal fade" id="login" role="dialog">
-    <div class="modal-dialog modal-sm">
 
-      <!-- Modal content no 1-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title text-center form-title">Login</h4>
-        </div>
-        <div class="modal-body">
-
-          <div class="login-box-body">
-            <p class="login-box-msg">Sign in to set appointment</p>
-            <div class="form-group">
-              <form id="login-form" method="post">
-                <div class="form-group has-feedback"> <span>
-                <?php  
-                if(isset($message))  
-                {  
-                     echo '<label>'.$message.'</label>';  
-                }  
-                ?>  </span>
-                  <input class="form-control" placeholder="Username or Email" type="text" autocomplete="off" name="username"/>
-                  <span class="fa fa-user form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback">
-               
-                  <input class="form-control" placeholder="Password" type="password" autocomplete="off" name="password" />
-                  <span class="fa fa-lock form-control-feedback"></span>
-                </div>
-                <div class="row">
-                  <div class="col-xs-12">
-                    <div class="checkbox icheck">
-                    
-                    </div>
-                  </div>
-                  <div class="col-xs-12">
-                    <button type="submit" class="btn btn-green btn-block btn-flat" name="btn-login">Sign In</button>
-                    <!-- onclick="userlogin()" -->
-                  </div>
-                  <center>
-                    <a href="register/index.php">Not registered? Signup here</a>
-                  </center>
-
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <!--/ Modal box-->
